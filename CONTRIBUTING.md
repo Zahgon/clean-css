@@ -5,8 +5,8 @@ Every piece of software has bugs, and squashing them should always be the priori
 If you spotted an incorrect behavior, knowing the following facts will help fixing it:
 
 * What's your input CSS and expected output?
-* Do you use clean-css directly or through any of the [plugins](https://github.com/clean-css/clean-css#how-to-use-clean-css-with-build-tools)?
-* What options do you pass to clean-css / the plugin?
+* Do you use clean-css as a library or through the `cleancss` command?
+* What options do you pass to clean-css?
 * What version of clean-css do you use?
 * What operating system do you use?
 
@@ -18,24 +18,21 @@ We love pull requests! To contribute to clean-css first fork, then clone the rep
 git clone git@github.com:your-username/clean-css.git
 ```
 
-Make sure you have node 6.0+ installed so npm can download all dependencies for you:
-
-```shell
-npm install
-```
+Make sure you have Go 1.23+ installed; clean-css uses the standard library only, so there is nothing else to download.
 
 Make sure the tests pass:
 
 ```shell
-npm test
+go test ./...
 ```
 
 Then add tests for your change. Check if tests fail. Make your change. Make the tests pass.
 
-At the end make sure code styling validation passes:
+At the end make sure the code is formatted and passes the checks:
 
 ```shell
-npm run lint
+gofmt -l .
+go vet ./...
 ```
 
 Finally push to your fork and [submit a pull request](https://github.com/clean-css/clean-css/compare/).

@@ -5,179 +5,108 @@
   <br/>
 </h1>
 
-[![npm version](https://img.shields.io/npm/v/clean-css.svg?style=flat)](https://www.npmjs.com/package/clean-css)
-[![Build Status](https://img.shields.io/github/workflow/status/clean-css/clean-css/Tests/master)](https://github.com/clean-css/clean-css/actions?query=workflow%3ATests+branch%3Amaster)
-[![PPC Linux Build Status](https://img.shields.io/travis/clean-css/clean-css/master.svg?style=flat&label=PPC%20Linux%20build)](https://travis-ci.org/clean-css/clean-css)
-[![Dependency Status](https://img.shields.io/david/clean-css/clean-css.svg?style=flat)](https://david-dm.org/clean-css/clean-css)
-[![npm Downloads](https://img.shields.io/npm/dm/clean-css.svg)](https://npmcharts.com/compare/clean-css?minimal=true)
-
-clean-css is a fast and efficient CSS optimizer for [Node.js](http://nodejs.org/) platform and [any modern browser](https://clean-css.github.io/).
-
-According to [tests](http://goalsmashers.github.io/css-minification-benchmark/) it is one of the best available.
+clean-css is a fast and efficient CSS optimizer, written in Go. It is available as a Go library and as the `cleancss` command.
 
 **Table of Contents**
 
-- [Node.js version support](#nodejs-version-support)
+- [Go version support](#go-version-support)
 - [Install](#install)
 - [Use](#use)
-  * [What's new in version 5.3](#whats-new-in-version-53)
-  * [What's new in version 5.0](#whats-new-in-version-50)
-  * [What's new in version 4.2](#whats-new-in-version-42)
-  * [What's new in version 4.1](#whats-new-in-version-41)
-  * [Important: 4.0 breaking changes](#important-40-breaking-changes)
-  * [Constructor options](#constructor-options)
+  * [Options](#options)
   * [Compatibility modes](#compatibility-modes)
-  * [Fetch option](#fetch-option)
   * [Formatting options](#formatting-options)
   * [Inlining options](#inlining-options)
   * [Optimization levels](#optimization-levels)
     + [Level 0 optimizations](#level-0-optimizations)
     + [Level 1 optimizations](#level-1-optimizations)
     + [Level 2 optimizations](#level-2-optimizations)
-  * [Plugins](#plugins)
   * [Minify method](#minify-method)
-  * [Promise interface](#promise-interface)
-  * [CLI utility](#cli-utility)
+  * [Command line](#command-line)
 - [FAQ](#faq)
   * [How to optimize multiple files?](#how-to-optimize-multiple-files)
   * [How to process multiple files without concatenating them into one output file?](#how-to-process-multiple-files-without-concatenating-them-into-one-output-file)
-  * [How to process remote `@import`s correctly?](#how-to-process-remote-imports-correctly)
-  * [How to apply arbitrary transformations to CSS properties?](#how-to-apply-arbitrary-transformations-to-css-properties)
+  * [What happens to remote `@import`s?](#what-happens-to-remote-imports)
   * [How to specify a custom rounding precision?](#how-to-specify-a-custom-rounding-precision)
+  * [How to optimize a stylesheet with custom `rpx` units?](#how-to-optimize-a-stylesheet-with-custom-rpx-units)
   * [How to keep a CSS fragment intact?](#how-to-keep-a-css-fragment-intact)
   * [How to preserve a comment block?](#how-to-preserve-a-comment-block)
   * [How to rebase relative image URLs?](#how-to-rebase-relative-image-urls)
-  * [How to work with source maps?](#how-to-work-with-source-maps)
   * [How to apply level 1 & 2 optimizations at the same time?](#how-to-apply-level-1--2-optimizations-at-the-same-time)
   * [What level 2 optimizations do?](#what-level-2-optimizations-do)
   * [What errors and warnings are?](#what-errors-and-warnings-are)
-  * [How to use clean-css with build tools?](#how-to-use-clean-css-with-build-tools)
-  * [How to use clean-css from web browser?](#how-to-use-clean-css-from-web-browser)
 - [Contributing](#contributing)
   * [How to get started?](#how-to-get-started)
 - [Acknowledgments](#acknowledgments)
 - [License](#license)
 
-# Node.js version support
+# Go version support
 
-clean-css requires Node.js 10.0+ (tested on Linux, OS X, and Windows)
+clean-css requires Go 1.23 or newer and uses the standard library only.
 
 # Install
 
+As a library:
+
 ```
-npm install --save-dev clean-css
+go get github.com/clean-css/clean-css
+```
+
+As a command:
+
+```
+go install github.com/clean-css/clean-css/cmd/cleancss@latest
 ```
 
 # Use
 
-```js
-var CleanCSS = require('clean-css');
-var input = 'a{font-weight:bold;}';
-var options = { /* options */ };
-var output = new CleanCSS(options).minify(input);
+```go
+package main
+
+import (
+	"fmt"
+
+	cleancss "github.com/clean-css/clean-css"
+)
+
+func main() {
+	minifier, err := cleancss.New(nil) // nil means default options
+	if err != nil {
+		panic(err)
+	}
+	output := minifier.Minify(cleancss.Text("a{font-weight:bold;}"))
+	fmt.Println(output.Styles) // a{font-weight:700}
+}
 ```
 
-## What's new in version 5.3
+## Options
 
-clean-css 5.3 introduces one new feature:
+`cleancss.New` takes the options as an ordered JSON object (`*jsutil.Object[any]`, which `jsutil.ParseJSON` returns for a JSON document); option values keep the loose typing of clean-css' JavaScript options, so a JSON document of options behaves exactly as the same object did there. The options are:
 
-* variables can be optimized using level 1's `variableValueOptimizers` option, which accepts a list of [value optimizers](https://github.com/clean-css/clean-css/blob/master/lib/optimizer/level-1/value-optimizers.js) or a list of their names, e.g. `variableValueOptimizers: ['color', 'fraction']`.
-
-## What's new in version 5.0
-
-clean-css 5.0 introduced some breaking changes:
-
-* Node.js 6.x and 8.x are officially no longer supported;
-* `transform` callback in level-1 optimizations is removed in favor of new [plugins](#plugins) interface;
-* changes default Internet Explorer compatibility from 10+ to >11, to revert the old default use `{ compatibility: 'ie10' }` flag;
-* changes default `rebase` option from `true` to `false` so URLs are not rebased by default. Please note that if you set `rebaseTo` option it still counts as setting `rebase: true` to preserve some of the backward compatibility.
-
-And on the new features side of things:
-
-* format options now accepts numerical values for all breaks, which will allow you to have more control over output formatting, e.g. `format: {breaks: {afterComment: 2}}` means clean-css will add two line breaks after each comment
-* a new `batch` option (defaults to `false`) is added, when set to `true` it will process all inputs, given either as an array or a hash, without concatenating them.
-
-## What's new in version 4.2
-
-clean-css 4.2 introduces the following changes / features:
-
-* Adds `process` method for compatibility with optimize-css-assets-webpack-plugin;
-* new `transition` property optimizer;
-* preserves any CSS content between `/* clean-css ignore:start */` and `/* clean-css ignore:end */` comments;
-* allows filtering based on selector in `transform` callback, see [example](#how-to-apply-arbitrary-transformations-to-css-properties);
-* adds configurable line breaks via `format: { breakWith: 'lf' }` option.
-
-## What's new in version 4.1
-
-clean-css 4.1 introduces the following changes / features:
-
-* `inline: false` as an alias to `inline: ['none']`;
-* `multiplePseudoMerging` compatibility flag controlling merging of rules with multiple pseudo classes / elements;
-* `removeEmpty` flag in level 1 optimizations controlling removal of rules and nested blocks;
-* `removeEmpty` flag in level 2 optimizations controlling removal of rules and nested blocks;
-* `compatibility: { selectors: { mergeLimit: <number> } }` flag in compatibility settings controlling maximum number of selectors in a single rule;
-* `minify` method improved signature accepting a list of hashes for a predictable traversal;
-* `selectorsSortingMethod` level 1 optimization allows `false` or `'none'` for disabling selector sorting;
-* `fetch` option controlling a function for handling remote requests;
-* new `font` shorthand and `font-*` longhand optimizers;
-* removal of `optimizeFont` flag in level 1 optimizations due to new `font` shorthand optimizer;
-* `skipProperties` flag in level 2 optimizations controlling which properties won't be optimized;
-* new `animation` shorthand and `animation-*` longhand optimizers;
-* `removeUnusedAtRules` level 2 optimization controlling removal of unused `@counter-style`, `@font-face`, `@keyframes`, and `@namespace` at rules;
-* the [web interface](https://clean-css.github.io/) gets an improved settings panel with "reset to defaults", instant option changes, and settings being persisted across sessions.
-
-## Important: 4.0 breaking changes
-
-clean-css 4.0 introduces some breaking changes:
-
-* API and CLI interfaces are split, so API stays in this repository while CLI moves to [clean-css-cli](https://github.com/clean-css/clean-css-cli);
-* `root`, `relativeTo`, and `target` options are replaced by a single `rebaseTo` option - this means that rebasing URLs and import inlining is much simpler but may not be (YMMV) as powerful as in 3.x;
-* `debug` option is gone as stats are always provided in output object under `stats` property;
-* `roundingPrecision` is disabled by default;
-* `roundingPrecision` applies to **all** units now, not only `px` as in 3.x;
-* `processImport` and `processImportFrom` are merged into `inline` option which defaults to `local`. Remote `@import` rules are **NOT** inlined by default anymore;
-* splits `inliner: { request: ..., timeout: ... }` option into `inlineRequest` and `inlineTimeout` options;
-* remote resources without a protocol, e.g. `//fonts.googleapis.com/css?family=Domine:700`, are not inlined anymore;
-* changes default Internet Explorer compatibility from 9+ to 10+, to revert the old default use `{ compatibility: 'ie9' }` flag;
-* renames `keepSpecialComments` to `specialComments`;
-* moves `roundingPrecision` and `specialComments` to level 1 optimizations options, see examples;
-* moves `mediaMerging`, `restructuring`, `semanticMerging`, and `shorthandCompacting` to level 2 optimizations options, see examples below;
-* renames `shorthandCompacting` option to `mergeIntoShorthands`;
-* level 1 optimizations are the new default, up to 3.x it was level 2;
-* `keepBreaks` option is replaced with `{ format: 'keep-breaks' }` to ease transition;
-* `sourceMap` option has to be a boolean from now on - to specify an input source map pass it a 2nd argument to `minify` method or via a hash instead;
-* `aggressiveMerging` option is removed as aggressive merging is replaced by smarter override merging.
-
-## Constructor options
-
-clean-css constructor accepts a hash as a parameter with the following options available:
-
+* `batch` - minifies every source of a list of paths or a hash on its own; defaults to `false`; see [how to process multiple files without concatenating them](#how-to-process-multiple-files-without-concatenating-them-into-one-output-file);
 * `compatibility` - controls compatibility mode used; defaults to `ie10+`; see [compatibility modes](#compatibility-modes) for examples;
-* `fetch` - controls a function for handling remote requests; see [fetch option](#fetch-option) for examples (since 4.1.0);
 * `format` - controls output CSS formatting; defaults to `false`; see [formatting options](#formatting-options) for examples;
 * `inline` - controls `@import` inlining rules; defaults to `'local'`; see [inlining options](#inlining-options) for examples;
-* `inlineRequest` - controls extra options for inlining remote `@import` rules, can be any of [HTTP(S) request options](https://nodejs.org/api/http.html#http_http_request_options_callback);
-* `inlineTimeout` - controls number of milliseconds after which inlining a remote `@import` fails; defaults to 5000;
 * `level` - controls optimization level used; defaults to `1`; see [optimization levels](#optimization-levels) for examples;
 * `rebase` - controls URL rebasing; defaults to `false`;
-* `rebaseTo` - controls a directory to which all URLs are rebased, most likely the directory under which the output file will live; defaults to the current directory;
-* `returnPromise` - controls whether `minify` method returns a Promise object or not; defaults to `false`; see [promise interface](#promise-interface) for examples;
-* `sourceMap` - controls whether an output source map is built; defaults to `false`;
-* `sourceMapInlineSources` - controls embedding sources inside a source map's `sourcesContent` field; defaults to false.
+* `rebaseTo` - controls a directory to which all URLs are rebased, most likely the directory under which the output file will live; defaults to the current directory.
+
+Source maps, fetching remote stylesheets and JavaScript plugins are not part of the Go version.
+
+The option examples below are written in JavaScript object notation with comments, as in the original documentation; pass the same structure as JSON.
 
 ## Compatibility modes
 
 There is a certain number of compatibility mode shortcuts, namely:
 
-* `new CleanCSS({ compatibility: '*' })` (default) - Internet Explorer 10+ compatibility mode
-* `new CleanCSS({ compatibility: 'ie9' })` - Internet Explorer 9+ compatibility mode
-* `new CleanCSS({ compatibility: 'ie8' })` - Internet Explorer 8+ compatibility mode
-* `new CleanCSS({ compatibility: 'ie7' })` - Internet Explorer 7+ compatibility mode
+* `{ compatibility: '*' }` (default) - Internet Explorer 10+ compatibility mode
+* `{ compatibility: 'ie9' }` - Internet Explorer 9+ compatibility mode
+* `{ compatibility: 'ie8' }` - Internet Explorer 8+ compatibility mode
+* `{ compatibility: 'ie7' }` - Internet Explorer 7+ compatibility mode
 
-Each of these modes is an alias to a [fine grained configuration](https://github.com/clean-css/clean-css/blob/master/lib/options/compatibility.js), with the following options available:
+Each of these modes is an alias to a fine grained configuration (see `internal/options/compatibility.go`), with the following options available:
 
-```js
-new CleanCSS({
+```jsonc
+{
   compatibility: {
     colors: {
       hexAlpha: false, // controls 4- and 8-character hex color support
@@ -218,66 +147,40 @@ new CleanCSS({
       vmin: true // controls treating `vmin` as a supported unit
     }
   }
-})
+}
 ```
 
 You can also use a string when setting a compatibility mode, e.g.
 
-```js
-new CleanCSS({
+```jsonc
+{
   compatibility: 'ie9,-properties.merging' // sets compatibility to IE9 mode with disabled property merging
-})
+}
 ```
-
-## Fetch option
-
-The `fetch` option accepts a function which handles remote resource fetching, e.g.
-
-```js
-var request = require('request');
-var source = '@import url(http://example.com/path/to/stylesheet.css);';
-new CleanCSS({
-  fetch: function (uri, inlineRequest, inlineTimeout, callback) {
-    request(uri, function (error, response, body) {
-      if (error) {
-        callback(error, null);
-      } else if (response && response.statusCode != 200) {
-        callback(response.statusCode, null);
-      } else {
-        callback(null, body);
-      }
-    });
-  }
-}).minify(source);
-```
-
-This option provides a convenient way of overriding the default fetching logic if it doesn't support a particular feature, say CONNECT proxies.
-
-Unless given, the default [loadRemoteResource](https://github.com/clean-css/clean-css/blob/master/lib/reader/load-remote-resource.js) logic is used.
 
 ## Formatting options
 
 By default output CSS is formatted without any whitespace unless a `format` option is given.
 First of all there are two shorthands:
 
-```js
-new CleanCSS({
+```jsonc
+{
   format: 'beautify' // formats output in a really nice way
-})
+}
 ```
 
 and
 
-```js
-new CleanCSS({
+```jsonc
+{
   format: 'keep-breaks' // formats output the default way but adds line breaks for improved readability
-})
+}
 ```
 
 however `format` option also accept a fine-grained set of options:
 
-```js
-new CleanCSS({
+```jsonc
+{
   format: {
     breaks: { // controls where to insert breaks
       afterAtRule: false, // controls if a line break comes after an at-rule; e.g. `@charset`; defaults to `false`
@@ -301,13 +204,13 @@ new CleanCSS({
     wrapAt: false, // controls maximum line length; defaults to `false`
     semicolonAfterLastProperty: false // controls removing trailing semicolons in rule; defaults to `false` - means remove
   }
-})
+}
 ```
 
 Also since clean-css 5.0 you can use numerical values for all line breaks, which will repeat a line break that many times, e.g:
 
-```js
-  new CleanCSS({
+```jsonc
+  {
     format: {
       breaks: {
         afterAtRule: 2,
@@ -321,7 +224,7 @@ Also since clean-css 5.0 you can use numerical values for all line breaks, which
         betweenSelectors: 0 // 0 is synonymous with `false`
       }
     }
-  })
+  }
 ```
 
 which will add nicer spacing between at rules and blocks.
@@ -330,52 +233,51 @@ which will add nicer spacing between at rules and blocks.
 
 `inline` option whitelists which `@import` rules will be processed, e.g.
 
-```js
-new CleanCSS({
+```jsonc
+{
   inline: ['local'] // default; enables local inlining only
-})
+}
 ```
 
-```js
-new CleanCSS({
+```jsonc
+{
   inline: ['none'] // disables all inlining
-})
+}
 ```
 
-```js
+```jsonc
 // introduced in clean-css 4.1.0
-
-new CleanCSS({
+{
   inline: false // disables all inlining (alias to `['none']`)
-})
+}
 ```
 
-```js
-new CleanCSS({
+```jsonc
+{
   inline: ['all'] // enables all inlining, same as ['local', 'remote']
-})
+}
 ```
 
-```js
-new CleanCSS({
+```jsonc
+{
   inline: ['local', 'mydomain.example.com'] // enables local inlining plus given remote source
-})
+}
 ```
 
-```js
-new CleanCSS({
+```jsonc
+{
   inline: ['local', 'remote', '!fonts.googleapis.com'] // enables all inlining but from given remote source
-})
+}
 ```
 
 ## Optimization levels
 
 The `level` option can be either `0`, `1` (default), or `2`, e.g.
 
-```js
-new CleanCSS({
+```jsonc
+{
   level: 2
-})
+}
 ```
 
 or a fine-grained configuration given via a hash.
@@ -392,8 +294,8 @@ Level 1 optimizations (default) operate on single properties only, e.g. can remo
 
 Here is a full list of available options:
 
-```js
-new CleanCSS({
+```jsonc
+{
   level: {
     1: {
       cleanupCharsets: true, // controls `@charset` moving to the front of a stylesheet; defaults to `true`
@@ -420,20 +322,20 @@ new CleanCSS({
       variableValueOptimizers: [] // controls value optimizers which are applied to variables
     }
   }
-});
+}
 ```
 
 There is an `all` shortcut for toggling all options at the same time, e.g.
 
-```js
-new CleanCSS({
+```jsonc
+{
   level: {
     1: {
       all: false, // set all values to `false`
       tidySelectors: true // turns on optimizing selectors
     }
   }
-});
+}
 ```
 
 ### Level 2 optimizations
@@ -444,8 +346,8 @@ Please note that if level 2 optimizations are turned on then, unless explicitely
 
 Here is a full list of available options:
 
-```js
-new CleanCSS({
+```jsonc
+{
   level: {
     2: {
       mergeAdjacentRules: true, // controls adjacent rules merging; defaults to true
@@ -464,210 +366,130 @@ new CleanCSS({
       skipProperties: [] // controls which properties won't be optimized, defaults to `[]` which means all will be optimized (since 4.1.0)
     }
   }
-});
+}
 ```
 
 There is an `all` shortcut for toggling all options at the same time, e.g.
 
-```js
-new CleanCSS({
+```jsonc
+{
   level: {
     2: {
       all: false, // sets all values to `false`
       removeDuplicateRules: true // turns on removing duplicate rules
     }
   }
-});
-```
-
-## Plugins
-
-In clean-css version 5 and above you can define plugins which run alongside level 1 and level 2 optimizations, e.g.
-
-```js
-var myPlugin = {
-  level1: {
-    property: function removeRepeatedBackgroundRepeat(_rule, property, _options) {
-      // So `background-repeat:no-repeat no-repeat` becomes `background-repeat:no-repeat`
-      if (property.name == 'background-repeat' && property.value.length == 2 && property.value[0][1] == property.value[1][1]) {
-        property.value.pop();
-        property.dirty = true;
-      }
-    }
-  }
 }
-
-new CleanCSS({plugins: [myPlugin]})
-
 ```
-
-Search `test\module-test.js` for `plugins` or check out `lib/optimizer/level-1/property-optimizers` and `lib/optimizer/level-1/value-optimizers` for more examples.
-
-__Important__: To rewrite your old `transform` as a plugin, check out [this commit](https://github.com/clean-css/clean-css/commit/b6ddc523267fc42cf0f6bd1626a79cad97319e17#diff-a71ef45f934725cdb25860dc0b606bcd59e3acee9788cd6df4f9d05339e8a153).
 
 ## Minify method
 
-Once configured clean-css provides a `minify` method to optimize a given CSS, e.g.
+Once configured, a `Minifier` optimizes a given input:
 
-```js
-var output = new CleanCSS(options).minify(source);
+```go
+output := minifier.Minify(cleancss.Text(source))
 ```
 
-The output of the `minify` method is a hash with following fields:
+The output has the following fields:
 
-```js
-console.log(output.styles); // optimized output CSS as a string
-console.log(output.sourceMap); // output source map if requested with `sourceMap` option
-console.log(output.errors); // a list of errors raised
-console.log(output.warnings); // a list of warnings raised
-console.log(output.stats.originalSize); // original content size after import inlining
-console.log(output.stats.minifiedSize); // optimized content size
-console.log(output.stats.timeSpent); // time spent on optimizations in milliseconds
-console.log(output.stats.efficiency); // `(originalSize - minifiedSize) / originalSize`, e.g. 0.25 if size is reduced from 100 bytes to 75 bytes
+```go
+output.Styles             // optimized output CSS as a string
+output.Errors             // a list of errors raised
+output.Warnings           // a list of warnings raised
+output.InlinedStylesheets // absolute paths of the inlined local stylesheets
+output.Stats.OriginalSize // original content size after import inlining, in UTF-16 code units
+output.Stats.MinifiedSize // optimized content size, in UTF-16 code units
+output.Stats.Efficiency   // 1 - MinifiedSize / OriginalSize, e.g. 0.25 if size is reduced from 100 to 75
 ```
-Example: Minifying a CSS string:
 
-```js
-const CleanCSS = require("clean-css");
+Example: minifying a CSS string
 
-const output = new CleanCSS().minify(`
-
+```go
+output := minifier.Minify(cleancss.Text(`
   a {
     color: blue;
   }
   div {
     margin: 5px
   }
-
-`);
-
-console.log(output);
-
-// Log:
-{
-  styles: 'a{color:#00f}div{margin:5px}',
-  stats: {
-    efficiency: 0.6704545454545454,
-    minifiedSize: 29,
-    originalSize: 88,
-    timeSpent: 6
-  },
-  errors: [],
-  inlinedStylesheets: [],
-  warnings: []
-}
+`))
+fmt.Println(output.Styles) // a{color:#00f}div{margin:5px}
 ```
 
-The `minify` method also accepts an input source map, e.g.
+To optimize a file without reading it first, pass its path:
 
-```js
-var output = new CleanCSS(options).minify(source, inputSourceMap);
+```go
+output := minifier.Minify(cleancss.Paths("path/to/file.css"))
 ```
-
-or a callback invoked when optimizations are finished, e.g.
-
-```js
-new CleanCSS(options).minify(source, function (error, output) {
-  // `output` is the same as in the synchronous call above
-});
-```
-
-To optimize a single file, without reading it first, pass a path to it to `minify` method as follows:
-
-```js
-var output = new CleanCSS(options).minify(['path/to/file.css'])
-```
-
-(if you won't enclose the path in an array, it will be treated as a CSS source instead).
 
 There are several ways to optimize multiple files at the same time, see [How to optimize multiple files?](#how-to-optimize-multiple-files).
 
-## Promise interface
+## Command line
 
-If you prefer clean-css to return a Promise object then you need to explicitely ask for it, e.g.
+The `cleancss` command minifies standard input, or the files given as arguments (concatenated in order), and writes the result to standard output:
 
-```js
-new CleanCSS({ returnPromise: true })
-  .minify(source)
-  .then(function (output) { console.log(output.styles); })
-  .catch(function (error) { // deal with errors });
+```
+cleancss [flags] [FILE...]
+  -O, --options JSON       clean-css options as a JSON object (default {}); repeatable, the last one wins
+      --options-file FILE  read the options object from a JSON file ("-" reads standard input)
+      --input-hash FILE    minify a hash input: FILE holds a JSON object mapping each source path to
+                           an object whose "styles" member is that source's CSS text
+      --stats              print the statistics after the warnings and errors
+      --                   ends the flags; every later argument is a FILE
 ```
 
-## CLI utility
+Warnings and errors go to standard error as `WARNING: <text>` and `ERROR: <text>` lines, followed with `--stats` by the `originalSize`, `minifiedSize`, `efficiency` and `inlinedStylesheets` lines. The exit status is 1 when there are errors, 2 for usage errors and 0 otherwise. In batch mode every source is written as a `== <key>` line, its CSS and a newline, and every standard error line is prefixed with `<key>: `.
 
-Clean-css has an associated command line utility that can be installed separately using `npm install clean-css-cli`. For more detailed information, please visit https://github.com/clean-css/clean-css-cli.
+```
+cleancss -O '{"level":2}' styles.css > styles.min.css
+```
 
 # FAQ
 
 ## How to optimize multiple files?
 
-It can be done either by passing an array of paths, or, when sources are already available, a hash or an array of hashes:
+It can be done either by passing a list of paths, or, when sources are already available, a hash of sources keyed by path:
 
-```js
-new CleanCSS().minify(['path/to/file/one', 'path/to/file/two']);
+```go
+minifier.Minify(cleancss.Paths("path/to/file/one", "path/to/file/two"))
 ```
 
-```js
-new CleanCSS().minify({
-  'path/to/file/one': {
-    styles: 'contents of file one'
-  },
-  'path/to/file/two': {
-    styles: 'contents of file two'
-  }
-});
+```go
+sources := jsutil.NewObject[string]()
+sources.Set("path/to/file/one", "contents of file one")
+sources.Set("path/to/file/two", "contents of file two")
+minifier.Minify(cleancss.Sources(sources))
 ```
 
-```js
-new CleanCSS().minify([
-  {'path/to/file/one': {styles: 'contents of file one'}},
-  {'path/to/file/two': {styles: 'contents of file two'}}
-]);
-```
-
-Passing an array of hashes allows you to explicitly specify the order in which the input files are concatenated. Whereas when you use a single hash the order is determined by the [traversal order of object properties](http://2ality.com/2015/10/property-traversal-order-es6.html) - available since 4.1.0.
+The order of a hash is the [traversal order of object properties](http://2ality.com/2015/10/property-traversal-order-es6.html) of the JavaScript original: keys that are array indexes come first.
 
 Important note - any `@import` rules already present in the hash will be resolved in memory.
 
 ## How to process multiple files without concatenating them into one output file?
 
-Since clean-css 5.0 you can, when passing an array of paths, hash, or array of hashes (see above), ask clean-css not to join styles into one output, but instead return stylesheets optimized one by one, e.g.
+With the `batch` option set, `MinifyBatch` returns the stylesheets optimized one by one, keyed by path:
 
-```js
-var output = new CleanCSS({ batch: true }).minify(['path/to/file/one', 'path/to/file/two']);
-var outputOfFile1 = output['path/to/file/one'].styles // all other fields, like errors, warnings, or stats are there too
-var outputOfFile2 = output['path/to/file/two'].styles
+```go
+outputs := minifier.MinifyBatch(cleancss.Paths("path/to/file/one", "path/to/file/two"))
+one, _ := outputs.Get("path/to/file/one") // all other fields, like errors, warnings, or stats are there too
 ```
 
-## How to process remote `@import`s correctly?
+## What happens to remote `@import`s?
 
-In order to inline remote `@import` statements you need to provide a callback to minify method as fetching remote assets is an asynchronous operation, e.g.:
-
-```js
-var source = '@import url(http://example.com/path/to/remote/styles);';
-new CleanCSS({ inline: ['remote'] }).minify(source, function (error, output) {
-  // output.styles
-});
-```
-
-If you don't provide a callback, then remote `@import`s will be left as is.
-
-## How to apply arbitrary transformations to CSS properties?
-
-Please see [plugins](#plugins).
+Remote stylesheets are never fetched: remote `@import` rules are kept as they are and reported with a warning, unless their content is given as a source of a hash input.
 
 ## How to specify a custom rounding precision?
 
 The level 1 `roundingPrecision` optimization option accept a string with per-unit rounding precision settings, e.g.
 
-```js
-new CleanCSS({
+```jsonc
+{
   level: {
     1: {
       roundingPrecision: 'all=3,px=5'
     }
   }
-}).minify(source)
+}
 ```
 
 which sets all units rounding precision to 3 digits except `px` unit precision of 5 digits.
@@ -678,14 +500,14 @@ Since `rpx` is a non standard unit (see [#1074](https://github.com/clean-css/cle
 
 However you can treat `rpx` units as regular ones:
 
-```js
-new CleanCSS({
+```jsonc
+{
   compatibility: {
     customUnits: {
       rpx: true
     }
   }
-}).minify(source)
+}
 ```
 
 ## How to keep a CSS fragment intact?
@@ -736,51 +558,12 @@ clean-css will handle it automatically for you in the following cases:
 * when correct paths are passed in via a hash;
 * when `rebaseTo` is used with any of above two.
 
-## How to work with source maps?
-
-To generate a source map, use `sourceMap: true` option, e.g.:
-
-```js
-new CleanCSS({ sourceMap: true, rebaseTo: pathToOutputDirectory })
-  .minify(source, function (error, output) {
-    // access output.sourceMap for SourceMapGenerator object
-    // see https://github.com/mozilla/source-map/#sourcemapgenerator for more details
-});
-```
-
-You can also pass an input source map directly as a 2nd argument to `minify` method:
-
-```js
-new CleanCSS({ sourceMap: true, rebaseTo: pathToOutputDirectory })
-  .minify(source, inputSourceMap, function (error, output) {
-    // access output.sourceMap to access SourceMapGenerator object
-    // see https://github.com/mozilla/source-map/#sourcemapgenerator for more details
-});
-```
-
-or even multiple input source maps at once:
-
-```js
-new CleanCSS({ sourceMap: true, rebaseTo: pathToOutputDirectory }).minify({
-  'path/to/source/1': {
-    styles: '...styles...',
-    sourceMap: '...source-map...'
-  },
-  'path/to/source/2': {
-    styles: '...styles...',
-    sourceMap: '...source-map...'
-  }
-}, function (error, output) {
-  // access output.sourceMap as above
-});
-```
-
 ## How to apply level 1 & 2 optimizations at the same time?
 
 Using the hash configuration specifying both optimization levels, e.g.
 
-```js
-new CleanCSS({
+```jsonc
+{
   level: {
     1: {
       all: true,
@@ -790,14 +573,14 @@ new CleanCSS({
       restructureRules: true
     }
   }
-})
+}
 ```
 
 will apply level 1 optimizations, except url normalization, and default level 2 optimizations with rule restructuring.
 
 ## What level 2 optimizations do?
 
-All level 2 optimizations are dispatched [here](https://github.com/clean-css/clean-css/blob/master/lib/optimizer/level-2/optimize.js#L67), and this is what they do:
+All level 2 optimizations are dispatched in `internal/optimizer/level2/optimize.go`, and this is what they do:
 
 * `recursivelyOptimizeBlocks` - does all the following operations on a nested block, like `@media` or `@keyframe`;
 * `recursivelyOptimizeProperties` - optimizes properties in rulesets and flat at-rules, like @font-face, by splitting them into components (e.g. `margin` into `margin-(bottom|left|right|top)`), optimizing, and restoring them back. You may want to use `mergeIntoShorthands` option to control whether you want to turn multiple components into shorthands;
@@ -815,12 +598,10 @@ All level 2 optimizations are dispatched [here](https://github.com/clean-css/cle
 
 If clean-css encounters invalid CSS, it will try to remove the invalid part and continue optimizing the rest of the code. It will make you aware of the problem by generating an error or warning. Although clean-css can work with invalid CSS, it is always recommended that you fix warnings and errors in your CSS.
 
-Example: Minify invalid CSS, resulting in two warnings:
+Example: minifying invalid CSS, resulting in two warnings:
 
-```js
-const CleanCSS = require("clean-css");
-
-const output = new CleanCSS().minify(`
+```go
+output := minifier.Minify(cleancss.Text(`
 
   a {
     -notarealproperty-: 5px;
@@ -830,108 +611,26 @@ const output = new CleanCSS().minify(`
     margin: 5px
   }
 
-`);
-
-console.log(output);
-
-// Log:
-{
-  styles: 'div{margin:5px}',
-  stats: {
-    efficiency: 0.8695652173913043,
-    minifiedSize: 15,
-    originalSize: 115,
-    timeSpent: 1
-  },
-  errors: [],
-  inlinedStylesheets: [],
-  warnings: [
-    "Invalid property name '-notarealproperty-' at 4:8. Ignoring.",
-    "Empty property 'color' at 5:8. Ignoring."
-  ]
-}
+`))
+// output.Styles:   div{margin:5px}
+// output.Warnings: Invalid property name '-notarealproperty-' at 4:8. Ignoring.
+//                  Empty property 'color' at 5:8. Ignoring.
 ```
 
-Example: Minify invalid CSS, resulting in one error:
+Example: minifying CSS with a missing import, resulting in one error:
 
-```js
-const CleanCSS = require("clean-css");
-
-const output = new CleanCSS().minify(`
+```go
+output := minifier.Minify(cleancss.Text(`
 
   @import "idontexist.css";
   a {
     color: blue;
   }
-  div {
-    margin: 5px
-  }
 
-`);
-
-console.log(output);
-
-// Log:
-{
-  styles: 'a{color:#00f}div{margin:5px}',
-  stats: {
-    efficiency: 0.7627118644067796,
-    minifiedSize: 28,
-    originalSize: 118,
-    timeSpent: 2
-  },
-  errors: [
-    'Ignoring local @import of "idontexist.css" as resource is missing.'
-  ],
-  inlinedStylesheets: [],
-  warnings: []
-}
+`))
+// output.Styles: a{color:#00f}
+// output.Errors: Ignoring local @import of "idontexist.css" as resource is missing.
 ```
-## Clean-css for Gulp
-An example of how you can include clean-css in gulp
-```js
-const { src, dest, series } = require('gulp');
-const CleanCSS = require('clean-css');
-const concat = require('gulp-concat');
-
-function css() {
-    const options = {
-        compatibility: '*', // (default) - Internet Explorer 10+ compatibility mode
-        inline: ['all'], // enables all inlining, same as ['local', 'remote']
-        level: 2 // Optimization levels. The level option can be either 0, 1 (default), or 2, e.g.
-        // Please note that level 1 optimization options are generally safe while level 2 optimizations should be safe for most users.
-    };
-
-    return src('app/**/*.css')
-        .pipe(concat('style.min.css'))
-        .on('data', function(file) {
-            const buferFile = new CleanCSS(options).minify(file.contents)
-            return file.contents = Buffer.from(buferFile.styles)
-        })
-        .pipe(dest('build'))
-}
-exports.css = series(css)
-```
-
-## How to use clean-css with build tools?
-
-There is a number of 3rd party plugins to popular build tools:
-
-* [Broccoli](https://github.com/broccolijs/broccoli#broccoli): [broccoli-clean-css](https://github.com/shinnn/broccoli-clean-css)
-* [Brunch](http://brunch.io/): [clean-css-brunch](https://github.com/brunch/clean-css-brunch)
-* [Grunt](http://gruntjs.com): [grunt-contrib-cssmin](https://github.com/gruntjs/grunt-contrib-cssmin)
-* [Gulp](http://gulpjs.com/): [gulp-clean-css](https://github.com/scniro/gulp-clean-css)
-* [Gulp](http://gulpjs.com/): [using vinyl-map as a wrapper - courtesy of @sogko](https://github.com/clean-css/clean-css/issues/342)
-* [component-builder2](https://github.com/component/builder2.js): [builder-clean-css](https://github.com/poying/builder-clean-css)
-* [Metalsmith](http://metalsmith.io): [metalsmith-clean-css](https://github.com/aymericbeaumet/metalsmith-clean-css)
-* [Lasso](https://github.com/lasso-js/lasso): [lasso-clean-css](https://github.com/yomed/lasso-clean-css)
-* [Start](https://github.com/start-runner/start): [start-clean-css](https://github.com/start-runner/clean-css)
-
-## How to use clean-css from web browser?
-
-* https://clean-css.github.io/ (official web interface)
-* http://refresh-sf.com/
-* http://adamburgess.github.io/clean-css-online/
 
 # Contributing
 
@@ -945,20 +644,13 @@ First clone the sources:
 git clone git@github.com:clean-css/clean-css.git
 ```
 
-then install dependencies:
-
-```bash
-cd clean-css
-npm install
-```
-
 then use any of the following commands to verify your copy:
 
 ```bash
-npm run bench # for clean-css benchmarks (see [test/bench.js](https://github.com/clean-css/clean-css/blob/master/test/bench.js) for details)
-npm run browserify # to create the browser-ready clean-css version
-npm run check # to lint JS sources with [JSHint](https://github.com/jshint/jshint/)
-npm test # to run all tests
+cd clean-css
+go vet ./...  # to check the sources
+go test ./... # to run all tests
+go build ./cmd/cleancss # to build the command
 ```
 
 # Acknowledgments
@@ -983,5 +675,3 @@ Sorted alphabetically by GitHub handle:
 * [@xhmikosr](https://github.com/xhmikosr) for suggesting new features, like option to remove special comments and strip out URLs quotation, and pointing out numerous improvements like JSHint, media queries, etc.
 
 # License
-
-clean-css is released under the [MIT License](https://github.com/clean-css/clean-css/blob/master/LICENSE).

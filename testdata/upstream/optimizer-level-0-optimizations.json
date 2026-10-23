@@ -1,0 +1,40 @@
+[
+ {
+  "options": {
+   "level": 0
+  },
+  "input": {
+   "kind": "text",
+   "value": "a{color:#f00;font-weight:bold}p{color:#f00}"
+  },
+  "batch": false,
+  "output": {
+   "styles": "a{color:#f00;font-weight:bold}p{color:#f00}",
+   "warnings": [],
+   "errors": [],
+   "inlinedStylesheets": [],
+   "originalSize": 43,
+   "minifiedSize": 43,
+   "efficiency": "0"
+  }
+ },
+ {
+  "options": {
+   "level": 0
+  },
+  "input": {
+   "kind": "text",
+   "value": "a{color:#f00;font-weight:;background:red}"
+  },
+  "batch": false,
+  "output": {
+   "styles": "a{color:#f00;font-weight:;background:red}",
+   "warnings": [],
+   "errors": [],
+   "inlinedStylesheets": [],
+   "originalSize": 41,
+   "minifiedSize": 41,
+   "efficiency": "0"
+  }
+ }
+]

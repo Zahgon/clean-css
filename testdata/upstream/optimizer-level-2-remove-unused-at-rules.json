@@ -1,0 +1,830 @@
+[
+ {
+  "options": {
+   "level": {
+    "2": {
+     "removeUnusedAtRules": true
+    }
+   }
+  },
+  "input": {
+   "kind": "text",
+   "value": "@counter-style test{system:fixed;symbols:url(one.png) url(two.png);suffix:\" \"}"
+  },
+  "batch": false,
+  "output": {
+   "styles": "",
+   "warnings": [],
+   "errors": [],
+   "inlinedStylesheets": [],
+   "originalSize": 78,
+   "minifiedSize": 0,
+   "efficiency": "1"
+  }
+ },
+ {
+  "options": {
+   "level": {
+    "2": {
+     "removeUnusedAtRules": true
+    }
+   }
+  },
+  "input": {
+   "kind": "text",
+   "value": "@counter-style test{system:fixed;symbols:url(one.png) url(two.png);suffix:\" \"}.block{list-style:test}"
+  },
+  "batch": false,
+  "output": {
+   "styles": "@counter-style test{system:fixed;symbols:url(one.png) url(two.png);suffix:\" \"}.block{list-style:test}",
+   "warnings": [],
+   "errors": [],
+   "inlinedStylesheets": [],
+   "originalSize": 101,
+   "minifiedSize": 101,
+   "efficiency": "0"
+  }
+ },
+ {
+  "options": {
+   "level": {
+    "2": {
+     "removeUnusedAtRules": true
+    }
+   }
+  },
+  "input": {
+   "kind": "text",
+   "value": "@counter-style test{system:fixed;symbols:url(one.png) url(two.png);suffix:\" \"}.block{list-style-type:test}"
+  },
+  "batch": false,
+  "output": {
+   "styles": "@counter-style test{system:fixed;symbols:url(one.png) url(two.png);suffix:\" \"}.block{list-style-type:test}",
+   "warnings": [],
+   "errors": [],
+   "inlinedStylesheets": [],
+   "originalSize": 106,
+   "minifiedSize": 106,
+   "efficiency": "0"
+  }
+ },
+ {
+  "options": {
+   "level": {
+    "2": {
+     "removeUnusedAtRules": true
+    }
+   }
+  },
+  "input": {
+   "kind": "text",
+   "value": "@counter-style test{system:fixed;symbols:url(one.png) url(two.png);suffix:\" \"}@media screen{.block{list-style-type:test}}"
+  },
+  "batch": false,
+  "output": {
+   "styles": "@counter-style test{system:fixed;symbols:url(one.png) url(two.png);suffix:\" \"}@media screen{.block{list-style-type:test}}",
+   "warnings": [],
+   "errors": [],
+   "inlinedStylesheets": [],
+   "originalSize": 121,
+   "minifiedSize": 121,
+   "efficiency": "0"
+  }
+ },
+ {
+  "options": {
+   "level": {
+    "2": {
+     "removeUnusedAtRules": true
+    }
+   }
+  },
+  "input": {
+   "kind": "text",
+   "value": "@counter-style test{system:fixed;symbols:url(one.png) url(two.png);suffix:\" \"}@counter-style test2{system:fixed;symbols:url(one.png) url(two.png);suffix:\" \"}.block{list-style-type:test}"
+  },
+  "batch": false,
+  "output": {
+   "styles": "@counter-style test{system:fixed;symbols:url(one.png) url(two.png);suffix:\" \"}.block{list-style-type:test}",
+   "warnings": [],
+   "errors": [],
+   "inlinedStylesheets": [],
+   "originalSize": 185,
+   "minifiedSize": 106,
+   "efficiency": "0.427027027027027"
+  }
+ },
+ {
+  "options": {
+   "level": {
+    "2": {
+     "removeUnusedAtRules": true
+    }
+   }
+  },
+  "input": {
+   "kind": "text",
+   "value": "@counter-style test{system:fixed;symbols:url(one.png) url(two.png);suffix:\" \"}.block{list-style:test!important}"
+  },
+  "batch": false,
+  "output": {
+   "styles": "@counter-style test{system:fixed;symbols:url(one.png) url(two.png);suffix:\" \"}.block{list-style:test!important}",
+   "warnings": [],
+   "errors": [],
+   "inlinedStylesheets": [],
+   "originalSize": 111,
+   "minifiedSize": 111,
+   "efficiency": "0"
+  }
+ },
+ {
+  "options": {
+   "level": {
+    "2": {
+     "removeUnusedAtRules": true
+    }
+   }
+  },
+  "input": {
+   "kind": "text",
+   "value": "@font-face{font-family:test}"
+  },
+  "batch": false,
+  "output": {
+   "styles": "",
+   "warnings": [],
+   "errors": [],
+   "inlinedStylesheets": [],
+   "originalSize": 28,
+   "minifiedSize": 0,
+   "efficiency": "1"
+  }
+ },
+ {
+  "options": {
+   "level": {
+    "2": {
+     "removeUnusedAtRules": true
+    }
+   }
+  },
+  "input": {
+   "kind": "text",
+   "value": "@font-face{font-family:test}.block{font-family:test}"
+  },
+  "batch": false,
+  "output": {
+   "styles": "@font-face{font-family:test}.block{font-family:test}",
+   "warnings": [],
+   "errors": [],
+   "inlinedStylesheets": [],
+   "originalSize": 52,
+   "minifiedSize": 52,
+   "efficiency": "0"
+  }
+ },
+ {
+  "options": {
+   "level": {
+    "2": {
+     "removeUnusedAtRules": true
+    }
+   }
+  },
+  "input": {
+   "kind": "text",
+   "value": "@font-face{font-family:\"test test\"}.block{font-family:\"test test\"}"
+  },
+  "batch": false,
+  "output": {
+   "styles": "@font-face{font-family:\"test test\"}.block{font-family:\"test test\"}",
+   "warnings": [],
+   "errors": [],
+   "inlinedStylesheets": [],
+   "originalSize": 66,
+   "minifiedSize": 66,
+   "efficiency": "0"
+  }
+ },
+ {
+  "options": {
+   "level": {
+    "2": {
+     "removeUnusedAtRules": true
+    }
+   }
+  },
+  "input": {
+   "kind": "text",
+   "value": "@font-face{font-family:test}.block{font-family:Test}"
+  },
+  "batch": false,
+  "output": {
+   "styles": "@font-face{font-family:test}.block{font-family:Test}",
+   "warnings": [],
+   "errors": [],
+   "inlinedStylesheets": [],
+   "originalSize": 52,
+   "minifiedSize": 52,
+   "efficiency": "0"
+  }
+ },
+ {
+  "options": {
+   "level": {
+    "2": {
+     "removeUnusedAtRules": true
+    }
+   }
+  },
+  "input": {
+   "kind": "text",
+   "value": "@font-face{font-family:\"test test\"}.block{font-family:'test test'}"
+  },
+  "batch": false,
+  "output": {
+   "styles": "@font-face{font-family:\"test test\"}.block{font-family:'test test'}",
+   "warnings": [],
+   "errors": [],
+   "inlinedStylesheets": [],
+   "originalSize": 66,
+   "minifiedSize": 66,
+   "efficiency": "0"
+  }
+ },
+ {
+  "options": {
+   "level": {
+    "2": {
+     "removeUnusedAtRules": true
+    }
+   }
+  },
+  "input": {
+   "kind": "text",
+   "value": "@font-face{font-family:test}.block{font-family:Arial,test,sans-serif}"
+  },
+  "batch": false,
+  "output": {
+   "styles": "@font-face{font-family:test}.block{font-family:Arial,test,sans-serif}",
+   "warnings": [],
+   "errors": [],
+   "inlinedStylesheets": [],
+   "originalSize": 69,
+   "minifiedSize": 69,
+   "efficiency": "0"
+  }
+ },
+ {
+  "options": {
+   "level": {
+    "2": {
+     "removeUnusedAtRules": true
+    }
+   }
+  },
+  "input": {
+   "kind": "text",
+   "value": "@font-face{font-family:test}.block{font:16px test}"
+  },
+  "batch": false,
+  "output": {
+   "styles": "@font-face{font-family:test}.block{font:16px test}",
+   "warnings": [],
+   "errors": [],
+   "inlinedStylesheets": [],
+   "originalSize": 50,
+   "minifiedSize": 50,
+   "efficiency": "0"
+  }
+ },
+ {
+  "options": {
+   "level": {
+    "2": {
+     "removeUnusedAtRules": true
+    }
+   }
+  },
+  "input": {
+   "kind": "text",
+   "value": "@font-face{font-family:test}.block{font:16px Arial,test,sans-serif}"
+  },
+  "batch": false,
+  "output": {
+   "styles": "@font-face{font-family:test}.block{font:16px Arial,test,sans-serif}",
+   "warnings": [],
+   "errors": [],
+   "inlinedStylesheets": [],
+   "originalSize": 67,
+   "minifiedSize": 67,
+   "efficiency": "0"
+  }
+ },
+ {
+  "options": {
+   "level": {
+    "2": {
+     "removeUnusedAtRules": true
+    }
+   }
+  },
+  "input": {
+   "kind": "text",
+   "value": "@font-face{font-family:test}@media screen{.block{font:16px test}}"
+  },
+  "batch": false,
+  "output": {
+   "styles": "@font-face{font-family:test}@media screen{.block{font:16px test}}",
+   "warnings": [],
+   "errors": [],
+   "inlinedStylesheets": [],
+   "originalSize": 65,
+   "minifiedSize": 65,
+   "efficiency": "0"
+  }
+ },
+ {
+  "options": {
+   "level": {
+    "2": {
+     "removeUnusedAtRules": true
+    }
+   }
+  },
+  "input": {
+   "kind": "text",
+   "value": "@font-face{font-family:test}.block{font:16px Arial,Test,sans-serif}"
+  },
+  "batch": false,
+  "output": {
+   "styles": "@font-face{font-family:test}.block{font:16px Arial,Test,sans-serif}",
+   "warnings": [],
+   "errors": [],
+   "inlinedStylesheets": [],
+   "originalSize": 67,
+   "minifiedSize": 67,
+   "efficiency": "0"
+  }
+ },
+ {
+  "options": {
+   "level": {
+    "2": {
+     "removeUnusedAtRules": true
+    }
+   }
+  },
+  "input": {
+   "kind": "text",
+   "value": "@font-face{font-family:test}@font-face{font-family:test2}.block{font:16px test}"
+  },
+  "batch": false,
+  "output": {
+   "styles": "@font-face{font-family:test}.block{font:16px test}",
+   "warnings": [],
+   "errors": [],
+   "inlinedStylesheets": [],
+   "originalSize": 79,
+   "minifiedSize": 50,
+   "efficiency": "0.36708860759493667"
+  }
+ },
+ {
+  "options": {
+   "level": {
+    "2": {
+     "removeUnusedAtRules": true
+    }
+   }
+  },
+  "input": {
+   "kind": "text",
+   "value": "@font-face{font-family:test}.block{font:16px test!important}"
+  },
+  "batch": false,
+  "output": {
+   "styles": "@font-face{font-family:test}.block{font:16px test!important}",
+   "warnings": [],
+   "errors": [],
+   "inlinedStylesheets": [],
+   "originalSize": 60,
+   "minifiedSize": 60,
+   "efficiency": "0"
+  }
+ },
+ {
+  "options": {
+   "level": {
+    "2": {
+     "removeUnusedAtRules": true
+    }
+   }
+  },
+  "input": {
+   "kind": "text",
+   "value": "@font-face{font-family:test}.block{font-family:test!important}"
+  },
+  "batch": false,
+  "output": {
+   "styles": "@font-face{font-family:test}.block{font-family:test!important}",
+   "warnings": [],
+   "errors": [],
+   "inlinedStylesheets": [],
+   "originalSize": 62,
+   "minifiedSize": 62,
+   "efficiency": "0"
+  }
+ },
+ {
+  "options": {
+   "level": {
+    "2": {
+     "removeUnusedAtRules": true
+    }
+   }
+  },
+  "input": {
+   "kind": "text",
+   "value": "@font-face{font-family:test;font-weight:normal}@font-face{font-family:test;font-weight:bold}"
+  },
+  "batch": false,
+  "output": {
+   "styles": "",
+   "warnings": [],
+   "errors": [],
+   "inlinedStylesheets": [],
+   "originalSize": 92,
+   "minifiedSize": 0,
+   "efficiency": "1"
+  }
+ },
+ {
+  "options": {
+   "level": {
+    "2": {
+     "removeUnusedAtRules": true
+    }
+   }
+  },
+  "input": {
+   "kind": "text",
+   "value": "@keyframes test{0%{opacity:0}100%{opacity:1}}"
+  },
+  "batch": false,
+  "output": {
+   "styles": "",
+   "warnings": [],
+   "errors": [],
+   "inlinedStylesheets": [],
+   "originalSize": 45,
+   "minifiedSize": 0,
+   "efficiency": "1"
+  }
+ },
+ {
+  "options": {
+   "level": {
+    "2": {
+     "removeUnusedAtRules": true
+    }
+   }
+  },
+  "input": {
+   "kind": "text",
+   "value": "@keyframes test{0%{opacity:0}100%{opacity:1}}.block{animation-name:test}"
+  },
+  "batch": false,
+  "output": {
+   "styles": "@keyframes test{0%{opacity:0}100%{opacity:1}}.block{animation-name:test}",
+   "warnings": [],
+   "errors": [],
+   "inlinedStylesheets": [],
+   "originalSize": 72,
+   "minifiedSize": 72,
+   "efficiency": "0"
+  }
+ },
+ {
+  "options": {
+   "level": {
+    "2": {
+     "removeUnusedAtRules": true
+    }
+   }
+  },
+  "input": {
+   "kind": "text",
+   "value": "@keyframes test{0%{opacity:0}100%{opacity:1}}.block{animation-name:custom,test}"
+  },
+  "batch": false,
+  "output": {
+   "styles": "@keyframes test{0%{opacity:0}100%{opacity:1}}.block{animation-name:custom,test}",
+   "warnings": [],
+   "errors": [],
+   "inlinedStylesheets": [],
+   "originalSize": 79,
+   "minifiedSize": 79,
+   "efficiency": "0"
+  }
+ },
+ {
+  "options": {
+   "level": {
+    "2": {
+     "removeUnusedAtRules": true
+    }
+   }
+  },
+  "input": {
+   "kind": "text",
+   "value": "@keyframes test{0%{opacity:0}100%{opacity:1}}.block{animation:1s ease-in test}"
+  },
+  "batch": false,
+  "output": {
+   "styles": "@keyframes test{0%{opacity:0}100%{opacity:1}}.block{animation:1s ease-in test}",
+   "warnings": [],
+   "errors": [],
+   "inlinedStylesheets": [],
+   "originalSize": 78,
+   "minifiedSize": 78,
+   "efficiency": "0"
+  }
+ },
+ {
+  "options": {
+   "level": {
+    "2": {
+     "removeUnusedAtRules": true
+    }
+   }
+  },
+  "input": {
+   "kind": "text",
+   "value": "@keyframes test{0%{opacity:0}100%{opacity:1}}.block{animation:1s ease-in custom,2s ease-out test}"
+  },
+  "batch": false,
+  "output": {
+   "styles": "@keyframes test{0%{opacity:0}100%{opacity:1}}.block{animation:1s ease-in custom,2s ease-out test}",
+   "warnings": [],
+   "errors": [],
+   "inlinedStylesheets": [],
+   "originalSize": 97,
+   "minifiedSize": 97,
+   "efficiency": "0"
+  }
+ },
+ {
+  "options": {
+   "level": {
+    "2": {
+     "removeUnusedAtRules": true
+    }
+   }
+  },
+  "input": {
+   "kind": "text",
+   "value": "@keyframes test{0%{opacity:0}100%{opacity:1}}.block{-moz-animation:1s ease-in test}"
+  },
+  "batch": false,
+  "output": {
+   "styles": "@keyframes test{0%{opacity:0}100%{opacity:1}}.block{-moz-animation:1s ease-in test}",
+   "warnings": [],
+   "errors": [],
+   "inlinedStylesheets": [],
+   "originalSize": 83,
+   "minifiedSize": 83,
+   "efficiency": "0"
+  }
+ },
+ {
+  "options": {
+   "level": {
+    "2": {
+     "removeUnusedAtRules": true
+    }
+   }
+  },
+  "input": {
+   "kind": "text",
+   "value": "@-webkit-keyframes test{0%{opacity:0}100%{opacity:1}}.block{animation:1s ease-in test}"
+  },
+  "batch": false,
+  "output": {
+   "styles": "@-webkit-keyframes test{0%{opacity:0}100%{opacity:1}}.block{animation:1s ease-in test}",
+   "warnings": [],
+   "errors": [],
+   "inlinedStylesheets": [],
+   "originalSize": 86,
+   "minifiedSize": 86,
+   "efficiency": "0"
+  }
+ },
+ {
+  "options": {
+   "level": {
+    "2": {
+     "removeUnusedAtRules": true
+    }
+   }
+  },
+  "input": {
+   "kind": "text",
+   "value": "@keyframes test{0%{opacity:0}100%{opacity:1}}@media screen{.block{animation:1s ease-in test}}"
+  },
+  "batch": false,
+  "output": {
+   "styles": "@keyframes test{0%{opacity:0}100%{opacity:1}}@media screen{.block{animation:1s ease-in test}}",
+   "warnings": [],
+   "errors": [],
+   "inlinedStylesheets": [],
+   "originalSize": 93,
+   "minifiedSize": 93,
+   "efficiency": "0"
+  }
+ },
+ {
+  "options": {
+   "level": {
+    "2": {
+     "removeUnusedAtRules": true
+    }
+   }
+  },
+  "input": {
+   "kind": "text",
+   "value": "@keyframes test{0%{opacity:0}100%{opacity:1}}@keyframes test2{0%{opacity:0}100%{opacity:1}}.block{animation-name:test}"
+  },
+  "batch": false,
+  "output": {
+   "styles": "@keyframes test{0%{opacity:0}100%{opacity:1}}.block{animation-name:test}",
+   "warnings": [],
+   "errors": [],
+   "inlinedStylesheets": [],
+   "originalSize": 118,
+   "minifiedSize": 72,
+   "efficiency": "0.38983050847457623"
+  }
+ },
+ {
+  "options": {
+   "level": {
+    "2": {
+     "removeUnusedAtRules": true
+    }
+   }
+  },
+  "input": {
+   "kind": "text",
+   "value": "@keyframes test{0%{opacity:0}100%{opacity:1}}.block{animation:1s ease-in test!important}"
+  },
+  "batch": false,
+  "output": {
+   "styles": "@keyframes test{0%{opacity:0}100%{opacity:1}}.block{animation:1s ease-in test!important}",
+   "warnings": [],
+   "errors": [],
+   "inlinedStylesheets": [],
+   "originalSize": 88,
+   "minifiedSize": 88,
+   "efficiency": "0"
+  }
+ },
+ {
+  "options": {
+   "level": {
+    "2": {
+     "removeUnusedAtRules": true
+    }
+   }
+  },
+  "input": {
+   "kind": "text",
+   "value": "@namespace svg url(http://www.w3.org/2000/svg);"
+  },
+  "batch": false,
+  "output": {
+   "styles": "",
+   "warnings": [],
+   "errors": [],
+   "inlinedStylesheets": [],
+   "originalSize": 47,
+   "minifiedSize": 0,
+   "efficiency": "1"
+  }
+ },
+ {
+  "options": {
+   "level": {
+    "2": {
+     "removeUnusedAtRules": true
+    }
+   }
+  },
+  "input": {
+   "kind": "text",
+   "value": "@namespace svg url(http://www.w3.org/2000/svg);svg|.block{color:red}"
+  },
+  "batch": false,
+  "output": {
+   "styles": "@namespace svg url(http://www.w3.org/2000/svg);svg|.block{color:red}",
+   "warnings": [],
+   "errors": [],
+   "inlinedStylesheets": [],
+   "originalSize": 68,
+   "minifiedSize": 68,
+   "efficiency": "0"
+  }
+ },
+ {
+  "options": {
+   "level": {
+    "2": {
+     "removeUnusedAtRules": true
+    }
+   }
+  },
+  "input": {
+   "kind": "text",
+   "value": "@namespace svg url(http://www.w3.org/2000/svg);.block[svg|title=test]{color:red}"
+  },
+  "batch": false,
+  "output": {
+   "styles": "@namespace svg url(http://www.w3.org/2000/svg);.block[svg|title=test]{color:red}",
+   "warnings": [],
+   "errors": [],
+   "inlinedStylesheets": [],
+   "originalSize": 80,
+   "minifiedSize": 80,
+   "efficiency": "0"
+  }
+ },
+ {
+  "options": {
+   "level": {
+    "2": {
+     "removeUnusedAtRules": true
+    }
+   }
+  },
+  "input": {
+   "kind": "text",
+   "value": "@namespace svg url(http://www.w3.org/2000/svg);@media screen{.block[svg|title=test]{color:red}}"
+  },
+  "batch": false,
+  "output": {
+   "styles": "@namespace svg url(http://www.w3.org/2000/svg);@media screen{.block[svg|title=test]{color:red}}",
+   "warnings": [],
+   "errors": [],
+   "inlinedStylesheets": [],
+   "originalSize": 95,
+   "minifiedSize": 95,
+   "efficiency": "0"
+  }
+ },
+ {
+  "options": {
+   "level": {
+    "2": {
+     "removeUnusedAtRules": true
+    }
+   }
+  },
+  "input": {
+   "kind": "text",
+   "value": "@namespace svg url(http://www.w3.org/2000/svg);@namespace xlink url(http://www.w3.org/2000/xlink);.block[svg|title=test],xlink|.block{color:red}"
+  },
+  "batch": false,
+  "output": {
+   "styles": "@namespace svg url(http://www.w3.org/2000/svg);@namespace xlink url(http://www.w3.org/2000/xlink);.block[svg|title=test],xlink|.block{color:red}",
+   "warnings": [],
+   "errors": [],
+   "inlinedStylesheets": [],
+   "originalSize": 144,
+   "minifiedSize": 144,
+   "efficiency": "0"
+  }
+ },
+ {
+  "options": {
+   "level": {
+    "2": {
+     "removeUnusedAtRules": true
+    }
+   }
+  },
+  "input": {
+   "kind": "text",
+   "value": "@namespace svg url(http://www.w3.org/2000/svg);@namespace xlink url(http://www.w3.org/2000/xlink);svg|.block{color:red}"
+  },
+  "batch": false,
+  "output": {
+   "styles": "@namespace svg url(http://www.w3.org/2000/svg);svg|.block{color:red}",
+   "warnings": [],
+   "errors": [],
+   "inlinedStylesheets": [],
+   "originalSize": 119,
+   "minifiedSize": 68,
+   "efficiency": "0.4285714285714286"
+  }
+ }
+]

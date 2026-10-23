@@ -6,19 +6,18 @@
 
 ### Environment
 
-* clean-css version - `npm ls clean-css`:
-* node.js version - `node -v`:
+* clean-css version - `go list -m github.com/clean-css/clean-css`:
+* Go version - `go version`:
 * operating system:
 
 ### Configuration options
 
-```js
-var CleanCSS = require('clean-css');
-new CleanCSS({
-  // compatibility: 'ie8',
-  // format: 'keep-breaks',
-  // level: 2
-})
+```json
+{
+  "compatibility": "ie8",
+  "format": "keep-breaks",
+  "level": 2
+}
 ```
 
 ### Input CSS

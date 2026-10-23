@@ -1,0 +1,102 @@
+[
+ {
+  "options": {
+   "level": 2
+  },
+  "input": {
+   "kind": "text",
+   "value": "@font-face{font-family:test;src:url(fonts/test.woff2)}@font-face{font-family:test;src:url(fonts/test.woff2)}"
+  },
+  "batch": false,
+  "output": {
+   "styles": "@font-face{font-family:test;src:url(fonts/test.woff2)}",
+   "warnings": [],
+   "errors": [],
+   "inlinedStylesheets": [],
+   "originalSize": 108,
+   "minifiedSize": 54,
+   "efficiency": "0.5"
+  }
+ },
+ {
+  "options": {
+   "level": 2
+  },
+  "input": {
+   "kind": "text",
+   "value": "@font-face{font-family:test;src:url(fonts/test.woff2)}.one{color:red}@font-face{font-family:test;src:url(fonts/test.woff2)}"
+  },
+  "batch": false,
+  "output": {
+   "styles": "@font-face{font-family:test;src:url(fonts/test.woff2)}.one{color:red}",
+   "warnings": [],
+   "errors": [],
+   "inlinedStylesheets": [],
+   "originalSize": 123,
+   "minifiedSize": 69,
+   "efficiency": "0.4390243902439024"
+  }
+ },
+ {
+  "options": {
+   "level": 2
+  },
+  "input": {
+   "kind": "text",
+   "value": "@font-face{font-family:test;src:url(fonts/test.woff2)}.one{color:#000}@font-face{font-family:test2;src:url(fonts/test.woff2)}"
+  },
+  "batch": false,
+  "output": {
+   "styles": "@font-face{font-family:test;src:url(fonts/test.woff2)}.one{color:#000}@font-face{font-family:test2;src:url(fonts/test.woff2)}",
+   "warnings": [],
+   "errors": [],
+   "inlinedStylesheets": [],
+   "originalSize": 125,
+   "minifiedSize": 125,
+   "efficiency": "0"
+  }
+ },
+ {
+  "options": {
+   "level": {
+    "2": {
+     "all": false,
+     "removeDuplicateFontRules": true
+    }
+   }
+  },
+  "input": {
+   "kind": "text",
+   "value": "@font-face{font-family:test;src:url(fonts/test.woff2)}.one{color:red}@font-face{font-family:test;src:url(fonts/test.woff2)}"
+  },
+  "batch": false,
+  "output": {
+   "styles": "@font-face{font-family:test;src:url(fonts/test.woff2)}.one{color:red}@font-face{}",
+   "warnings": [],
+   "errors": [],
+   "inlinedStylesheets": [],
+   "originalSize": 123,
+   "minifiedSize": 81,
+   "efficiency": "0.3414634146341463"
+  }
+ },
+ {
+  "options": {
+   "level": 1
+  },
+  "input": {
+   "kind": "text",
+   "value": "@font-face{font-family:test;src:url(fonts/test.woff2)}@font-face{font-family:test;src:url(fonts/test.woff2)}"
+  },
+  "batch": false,
+  "output": {
+   "styles": "@font-face{font-family:test;src:url(fonts/test.woff2)}@font-face{font-family:test;src:url(fonts/test.woff2)}",
+   "warnings": [],
+   "errors": [],
+   "inlinedStylesheets": [],
+   "originalSize": 108,
+   "minifiedSize": 108,
+   "efficiency": "0"
+  }
+ }
+]
